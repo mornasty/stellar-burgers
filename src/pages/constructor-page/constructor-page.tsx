@@ -1,24 +1,17 @@
-import { useDispatch, useSelector } from '../../services/store';
+import { useSelector } from '../../services/store';
 
 import styles from './constructor-page.module.css';
 
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { FC, useEffect } from 'react';
-import {
-  getIngredientsThunk,
-  selectIngredientsStatus
-} from '../../services/slices/ingredientsSlice';
+import { FC } from 'react';
+import { selectIngredientsStatus } from '../../services/slices/ingredientsSlice';
 
 export const ConstructorPage: FC = () => {
   /** TODO: взять переменную из стора */
-  const dispatch = useDispatch();
   const ingredientsStatus = useSelector(selectIngredientsStatus);
 
-  useEffect(() => {
-    dispatch(getIngredientsThunk());
-  }, [dispatch]);
   return (
     <>
       {ingredientsStatus !== 'received' ? (

@@ -16,6 +16,7 @@ import { deleteCookie, setCookie } from '../../utils/cookie';
 
 export interface IUserState {
   status: string;
+  isLaunched: boolean;
   registerError: string | null;
   isAuthenticated: boolean;
   isAuthChecked: boolean;
@@ -115,14 +116,12 @@ export const forgotPasswordThunk = createAsyncThunk(
 
 export const getOrdersThunk = createAsyncThunk(
   'user/getOrdersApi',
-  async () => {
-    const result = await getOrdersApi();
-    return result;
-  }
+  getOrdersApi
 );
 
 export const initialState: IUserState = {
   status: 'idle',
+  isLaunched: false,
   registerError: null,
   isAuthenticated: false,
   isAuthChecked: false,
@@ -136,7 +135,11 @@ export const initialState: IUserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    launch: (state) => {
+      state.isLaunched = true;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUserThunk.pending, (state) => {
@@ -191,6 +194,7 @@ export const userSlice = createSlice({
       })
       .addCase(getUserThunk.rejected, (state, action) => {
         state.status = 'rejected';
+        state.isLaunched = true;
         state.isAuthChecked = true;
         state.loginError =
           action.error.message || 'Не удалось получить данные о пользователе';
@@ -198,6 +202,7 @@ export const userSlice = createSlice({
       .addCase(getUserThunk.fulfilled, (state, action) => {
         state.status = 'received';
         state.user = action.payload;
+        state.isLaunched = true;
         state.isAuthChecked = true;
         state.loginError = null;
       })
@@ -208,12 +213,14 @@ export const userSlice = createSlice({
       .addCase(updateUserThunk.rejected, (state, action) => {
         state.status = 'rejected';
         state.isAuthChecked = true;
+        state.isLaunched = true;
         state.loginError =
           action.error.message || 'Не удалось обновить данные о пользователе';
       })
       .addCase(updateUserThunk.fulfilled, (state, action) => {
         state.status = 'received';
         state.user = action.payload;
+        state.isLaunched = true;
         state.isAuthChecked = true;
         state.loginError = null;
       })
@@ -260,6 +267,7 @@ export const userSlice = createSlice({
   },
   selectors: {
     selectUser: (state) => state.user,
+    selectIsLaunched: (state) => state.isLaunched,
     selectUserOrders: (state) => state.orders,
     selectStatus: (state) => state.status,
     selectRegisterError: (state) => state.registerError,
@@ -272,6 +280,7 @@ export const userSlice = createSlice({
 
 export const {
   selectUser,
+  selectIsLaunched,
   selectUserOrders,
   selectIsAuthChecked,
   selectOrdersError,
@@ -281,4 +290,5 @@ export const {
   selectLoginError
 } = userSlice.selectors;
 
+export const { launch } = userSlice.actions;
 export const userReducer = userSlice.reducer;

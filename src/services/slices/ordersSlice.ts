@@ -23,12 +23,9 @@ const initialState: IOrdersState = {
   totalToday: 0
 };
 
-export const getFeedsThunk = createAsyncThunk<TOrdersData>(
+export const getFeedsThunk = createAsyncThunk(
   'orders/getFeedsApi',
-  async () => {
-    const result = await getFeedsApi();
-    return result;
-  }
+  getFeedsApi
 );
 
 export const getOrderByNumberThunk = createAsyncThunk(

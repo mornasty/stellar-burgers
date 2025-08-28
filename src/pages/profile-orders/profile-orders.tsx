@@ -17,7 +17,6 @@ export const ProfileOrders: FC = () => {
 
   useEffect(() => {
     dispatch(getOrdersThunk());
-    console.log(123);
   }, [dispatch]);
 
   if (status === 'loading') {

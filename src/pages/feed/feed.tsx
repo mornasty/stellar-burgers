@@ -8,7 +8,6 @@ import {
   selectStatusAll
 } from '../../services/slices/ordersSlice';
 import { useDispatch, useSelector } from '../../services/store';
-import { getIngredientsThunk } from '../../services/slices/ingredientsSlice';
 
 export const Feed: FC = () => {
   /** TODO: взять переменную из стора */
@@ -29,7 +28,6 @@ export const Feed: FC = () => {
       orders={orders}
       handleGetFeeds={() => {
         dispatch(getFeedsThunk());
-        dispatch(getIngredientsThunk());
       }}
     />
   );
